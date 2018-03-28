@@ -1,0 +1,15 @@
+Un buen link para comenzar con docker -- 
+la parte de crear un usuario distinto agregado al grupo docker
+https://www.howtoforge.com/tutorial/dockerizing-lemp-stack-with-docker-compose-on-ubuntu/
+
+El enlace sgte fue de ayuda para conectar php con mariadb
+https://stackoverflow.com/questions/46508038/docker-cant-connect-to-mariadb-with-php
+
+
+Para conectarse a mariadb
+docker-compose exec [name-service] bash
+OR
+docker exec -it [name-container|ID] bash
+
+
+NGINX no acepta variables de entorno-- mas info en docker hub oficial de nginx
