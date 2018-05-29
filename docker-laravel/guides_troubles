@@ -1,0 +1,46 @@
+https://github.com/hitalos/laravel
+https://blog.pusher.com/docker-for-development-laravel-php/
+https://buddy.works/guides/laravel-in-docker
+http://geekyplatypus.com/dockerise-your-php-application-with-nginx-and-php7-fpm/
+https://github.com/ulsmith/alpine-apache-php7
+https://stackoverflow.com/questions/41303775/alpine-variants-of-php-and-apache-httpd-in-docker
+http://blog.zot24.com/tips-tricks-docker/
+
+TROUBLES::: with dependencias como pdo_pgsql xmlrc
+https://github.com/docker-library/php/issues/221
+https://gist.github.com/ben-albon/3c33628662dcd4120bf4
+https://github.com/docker-library/php/issues/75
+https://gist.github.com/hoandang/88bfb1e30805df6d1539640fc1719d12
+
+SUPER DEPENDENCIES LIST NAMES
+https://gist.github.com/chronon/95911d21928cff786e306c23e7d1d3f3
+https://gist.github.com/hoandang/88bfb1e30805df6d1539640fc1719d12
+
+Problemas al instalar pdo_pgsql los sgtes links de ayuda
+https://github.com/docker-library/php/issues/541  --- mcrypt resulta deprecated en php 7.2 tambien hay un tip sobre mostrar los modulos instalados en tu imagen php
+https://github.com/docker-library/php/issues/221  --- para error con pdo_pgsql ... al final un buen tip(use eso en el Dockerfile)
+https://gist.github.com/ben-albon/3c33628662dcd4120bf4 ---- otro link relacionado con el error de pdo_pgsql
+
+TIPs sobre como definir variables
+https://forums.docker.com/t/internal-variables-in-dockerfiles/327
+https://vsupalov.com/docker-arg-env-variable-guide/
+https://blog.dockbit.com/templating-your-dockerfile-like-a-boss-2a84a67d28e9
+
+### Ingresar container con non-root user (1001 es el id de mi usuario "dockeruser" en mi host)
+### links references
+### https://medium.com/redbubble/running-a-docker-container-as-a-non-root-user-7d2e00f8ee15
+### https://hackernoon.com/docker-run-vs-exec-deep-dive-into-their-differences-19a1041735a3
+### http://goinbigdata.com/docker-run-vs-cmd-vs-entrypoint/
+### https://medium.com/@mccode/processes-in-containers-should-not-run-as-root-2feae3f0df3b
+### 
+docker exec -it --user 1001 container_server sh
+docker exec -it --user 1001 container_php sh
+OR
+docker exec -it --user 1001:1001 container_php sh
+docker exec -it --user $(id -u):$(id -g) container_php sh
+
+### Como ejecutar tu docker-compose
+##https://stackoverflow.com/questions/32612650/how-to-get-docker-compose-to-always-re-create-containers-from-fresh-images
+docker-compose rm -f
+docker-compose pull
+docker-compose up --build -d
