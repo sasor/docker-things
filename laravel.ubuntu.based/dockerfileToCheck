@@ -1,0 +1,42 @@
+FROM php:ubuntu
+ARG USER=develop 
+ARG UID=1000
+ARG GID=1000
+RUN useradd \
+    -r \
+    --create-home \
+    --uid ${UID} \
+#    --gid \
+    ${USER}
+
+USER ${USER}
+
+RUN composer global require "laravel/installer"
+
+# useradd -r(system user) --create-home(or -m create a home directory) 
+#         --uid(defaut 1000) --gid(default 1000) [USER](default develop)
+#
+# Para construir la imagen pasar los argumentos desde la consola
+# Example
+# docker build --build-arg USER=$(id -un) \ ---osea el nombre de usuario whoami OR id -un
+#              --build-arg UID=$(id -u)   \ ---id -u nos muestra el id del usuario en nuestro host
+#              --build-arg GID=$(id -g)   \ ---id -g nos muestra el id del grupo en nuestro host
+#              -t [image-name]
+#
+# OR with docker-compose
+#
+# ....
+# build:
+# args:
+#     USER: $(id -un)
+#     UID: $(id -u)
+#     GID: $(id -g)
+#
+# DESGRACIADAMENTE NO FUNCIONA EN IMAGES ALPINE
+# LINKS de AYUDA
+# https://medium.com/@mccode/understanding-how-uid-and-gid-work-in-docker-containers-c37a01d01cf
+# https://stackoverflow.com/questions/44683119/dockerfile-replicate-the-host-user-uid-and-gid-to-the-image
+# https://github.com/nodejs/docker-node/issues/289
+# https://gist.github.com/renzok/29c9e5744f1dffa392cf
+# https://www.lifewire.com/current-linux-user-whoami-command-3867579
+# 

@@ -1,0 +1,7 @@
+## Otra forma de ejecutar un container..exponiendo el puerto 3000 al host
+
+## -v [representa el volumen]
+## -w [WORKDIR en Dockerfile and working_dir in docker-compose file]
+## --skip-bundle [se salta la instalacion de las gemas]
+
+docker run -it --rm -p 3000:3000 -v "$PWD":/usr/src/app -w /usr/src/app rails:base rails new --database=postgresql --skip-bundle -J --skip-coffee .

@@ -1,0 +1,20 @@
+version: '2'
+# link:https://blog.blindside.io/developing-a-ruby-on-rails-app-with-docker-compose-d75b20334634
+services:
+  web:
+    image: rails:base
+    volumes:
+      - ./:/home/dev/src
+    working_dir: /home/dev/src
+    command: [bundle, exec, puma]
+    ports:
+      - '3000:3000'
+    links:
+      - db
+    environment:
+      DATABASE_URL: postgres://postgres@db
+
+  db:
+    image: postgres:alpine
+    ports:
+      - '54032:5432'

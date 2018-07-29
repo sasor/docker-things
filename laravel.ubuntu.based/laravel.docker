@@ -1,0 +1,25 @@
+FROM php:7.1-fpm
+ARG USER=dev
+ARG UID=1000
+ARG GID=1000
+
+RUN apt-get update \
+ && apt-get install -y libpq-dev libxml2-dev zlib1g-dev --no-install-recommends \
+ && docker-php-ext-install pdo pdo_pgsql pgsql mbstring tokenizer json \
+                           ctype xmlrpc zip \
+ && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+ && php composer-setup.php --install-dir=/usr/bin --filename=composer \
+ && php -r "unlink('composer-setup.php');"
+
+RUN useradd \
+    -r \
+    --create-home \
+    --uid ${UID} \
+    ${USER}
+
+USER ${USER}
+
+RUN composer global require 'laravel/installer'
+
+# ENV PATH ${HOME}/.composer/vendor/bin:$PATH -- tiene error,HOME no existe
+ENV PATH $PATH:/home/${USER}/.composer/vendor/bin
