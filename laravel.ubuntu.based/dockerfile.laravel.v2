@@ -1,0 +1,36 @@
+FROM php:7.2-fpm
+
+ARG USER=dev
+ARG UID=1000
+ARG GID=1000
+
+RUN apt-get update \
+ && apt-get install -y locales locales-all libpq-dev libxml2-dev zlib1g-dev libpng-dev unzip --no-install-recommends \
+ && docker-php-ext-install pdo pdo_mysql pdo_pgsql pgsql mbstring tokenizer json \
+                           ctype gd xmlrpc zip \
+ && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+ && php composer-setup.php --install-dir=/usr/bin --filename=composer \
+ && php -r "unlink('composer-setup.php');"
+
+# Set the locale... se tiene que instalar locales para ejecutar el comando locale-gen..sino tira error al crear la imagen,luego
+# si instalamos locales-all sera suficiente...de esa forma no tendremos el error al ejecutar locale -a dentro el container
+# probar...sin instalar locales-all...y vera el error
+#  ver url: http://jaredmarkell.com/docker-and-locales/ 
+# de esta forma creo que soluciono el problema del espanol en laravel para las fechas
+RUN locale-gen es_ES.UTF-8
+ENV LANG es_ES.UTF-8
+ENV LANGUAGE es_ES:es
+ENV LC_ALL es_ES.UTF-8
+
+RUN useradd \
+    -r \
+    --create-home \
+    --uid ${UID} \
+    ${USER}
+
+USER ${USER}
+
+RUN composer global require 'laravel/installer'
+
+# ENV PATH ${HOME}/.composer/vendor/bin:$PATH -- tiene error,HOME no existe
+ENV PATH $PATH:/home/${USER}/.composer/vendor/bin

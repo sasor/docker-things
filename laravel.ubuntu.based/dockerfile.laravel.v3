@@ -1,0 +1,42 @@
+# imagen laravel:v3 en mi lenovo
+FROM php:7.2-fpm
+
+ARG USER=dev
+ARG UID=1000
+ARG GID=1000
+
+RUN apt-get update \
+ && apt-get install -y locales libpq-dev libxml2-dev zlib1g-dev libpng-dev unzip --no-install-recommends \
+ && docker-php-ext-install pdo pdo_mysql pdo_pgsql pgsql mbstring tokenizer json \
+                           ctype gd xmlrpc zip \
+ && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+ && php composer-setup.php --install-dir=/usr/bin --filename=composer \
+ && php -r "unlink('composer-setup.php');"
+
+# Set the locale
+# url: http://jaredmarkell.com/docker-and-locales/
+RUN locale-gen es_ES.UTF-8
+ENV LANG es_ES.UTF-8
+ENV LANGUAGE es_ES:es
+ENV LC_ALL es_ES.UTF-8
+# la sgte linea fue usada para laravel:v3
+# la sgte linea arregla el error que tira al ejecutar locale -a dentro el container..probar comentando la sgte linea
+# con la sgte linea no es necesario instalar todos los locales..osea locales-all...(se instalo locales-all en la imagen laravel:v2 cuyo fichero es dockerfile.laravel.v2)
+# url: https://github.com/CentOS/sig-cloud-instance-images/issues/71
+# si comentamos la sgte linea tra error como ya se menciono, ademas probando con tinker de laravel no funciona las fechas en espanol
+# entonces la sgte linea soluciona ese error (sin instalar locales-all)...y las fechas en espanol funcionan bien con laravel
+# probar...deberia probar para entender mejor
+RUN localedef -i es_ES -f UTF-8 es_ES.UTF-8
+
+RUN useradd \
+    -r \
+    --create-home \
+    --uid ${UID} \
+    ${USER}
+
+USER ${USER}
+
+RUN composer global require 'laravel/installer'
+
+# ENV PATH ${HOME}/.composer/vendor/bin:$PATH -- tiene error,HOME no existe
+ENV PATH $PATH:/home/${USER}/.composer/vendor/bin

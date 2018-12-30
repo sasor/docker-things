@@ -1,0 +1,12 @@
+http://jaredmarkell.com/docker-and-locales/
+https://github.com/CentOS/sig-cloud-instance-images/issues/71
+https://stackoverflow.com/questions/28405902/how-to-set-the-locale-inside-a-ubuntu-docker-container
+https://askubuntu.com/questions/581458/how-to-configure-locales-to-unicode-in-a-docker-ubuntu-14-04-container
+https://blog.mkowalski.net/2016/05/17/solving-locale-issues-with-docker-containers/
+https://webkul.com/blog/setup-locale-python3/
+
+# NOTE...estos enlaces contienen algunas ayudas y algunos tips para solucionar los locales (para mi laravel)
+# ejemplos
+# > localedef -i en_US -f UTF-8 en_US.UTF-8
+# > docker run -e LANG=C.UTF-8 -e LC_ALL=C.UTF-8 -it --rm <yourimage> <yourcommand>
+# > docker-compose run --rm -e TERM=xterm -e LANG=C.UTF-8 <image> <comand>
