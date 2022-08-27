@@ -1,0 +1,51 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: ./dockerfiles
+      dockerfile: Dockerfile
+      args:
+        USER: ${DOCKER_USER}
+        ID: ${DOCKER_USER_ID}
+    container_name: app
+    tty: true
+    working_dir: ${DOCKER_HOMEDIR}
+#    user: "1001:1001"
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    volumes:
+      - ./:${DOCKER_HOMEDIR}
+
+  db:
+    container_name: db
+    image: "postgres:10.20"
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+    volumes:
+      - db:/var/lib/postgresql/data
+
+volumes:
+  db:
+
+# stdin_open: true # docker run -i
+# tty: true        # docker run -t
+# DOCKER_USER_ID=$(id -u) docker compose build app OR docker compose build app WHEN DOCKER_USER_ID is defined in .env file
+
+
+# https://blog.giovannidemizio.eu/
+# https://newbedev.com/convert-a-docker-run-command-into-a-docker-compose
+## UID y GID
+# https://stackoverflow.com/questions/56844746/how-to-set-uid-and-gid-in-docker-compose
+# https://github.com/docker/compose/issues/4725
+# https://github.com/docker/compose/issues/2380
+## Extras
+# https://stackoverflow.com/questions/60274262/linux-at-command-running-docker-compose
+# https://blog.atulr.com/docker-local-environment/
